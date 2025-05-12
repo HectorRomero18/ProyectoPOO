@@ -1,14 +1,14 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render,redirect, get_object_or_404
-from .models import Cargo, Departamento
-from .forms import CargoForm, DepartamentoForm
+from .models import Cargo, Departamento, Empleado
+from .forms import CargoForm, DepartamentoForm, EmpleadoForm
 
 
 def home(request):
     data = {
         'title': 'APP DE NO SE QUE',
-        'description': 'Gesion de citas medicas',
-        'author': 'Daniel Vera',
+        'description': 'Gesion de nóminas',
+        'author': 'Los 4 Fantasticos',
         'year': 2025,
     }
     # doctores = Doctor.objects.all()
@@ -33,7 +33,12 @@ def create_cargo(request):
     return render(request, 'Cargo/create_cargo.html', {'form': form})
 
 def mostrar_cargos(request):
-    cargos = Cargo.objects.all()
+    query = request.GET.get('q')
+
+    if query:
+        cargos = Cargo.objects.filter(descripcion__icontains=query)
+    else:
+        cargos = Cargo.objects.all()
     return render(request, 'Cargo/list.html', {'cargos': cargos})
 
 def delete_cargo(request, id):
@@ -86,4 +91,37 @@ def update_departamento(request, id):
     return render(request, 'Departamento/update_departamento.html', {'form': form})
 
 
+# ************************Vistas para el CRUD de Empleado*****************************************
 
+def create_empleado(request):
+    if request.method == 'POST':
+        form = EmpleadoForm(request.POST or None)
+        if form.is_valid():
+            form.save()
+            return redirect('core:list_empleado')
+    else:
+        form  = EmpleadoForm()
+    return render(request, 'Empleado/create_empleado.html', {'form': form})
+
+def mostrar_empleado(request):
+    query = request.GET.get('q')
+    if query:
+        empleado = Empleado.objects.filter(cedula__icontains=query)
+    else:
+        empleado = Empleado.objects.all()
+    return render(request, 'Empleado/list.html', {'empleados': empleado})
+
+def delete_empleado(request, id):
+    empleado = get_object_or_404(Empleado, id=id)
+    empleado.delete()
+    return redirect('core:list_empleado') 
+
+def update_empleado(request,id):
+    empleado = get_object_or_404(Empleado, id=id)
+    if request.method == 'POST':
+        form = EmpleadoForm(request.POST, instance=empleado)
+        form.save()
+        return redirect('core:list_empleado')
+    else:
+        form = EmpleadoForm(instance=empleado)
+    return render(request, 'Empleado/update_empleado.html', {'form': form})
