@@ -3,6 +3,9 @@ from .import  views
 app_name = 'core'  # Nombre de la aplicación para el espacio de nombres
 urlpatterns = [
     path('', views.home, name='home'),
+    path('signup/', views.signup, name='signup'),
+    path('logout/', views.signup, name='logout'),
+
     
     # *****************URL PARA EL MODELO CARGO**********************
     path('create_cargo', views.create_cargo, name='create_cargo'),
