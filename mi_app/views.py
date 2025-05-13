@@ -6,9 +6,9 @@ from .forms import CargoForm, DepartamentoForm, EmpleadoForm
 
 def home(request):
     data = {
-        'title': 'APP DE NO SE QUE',
-        'description': 'Gesion de nóminas',
-        'author': 'Los 4 Fantasticos',
+        'title': 'Sistema de Nómina de Pagos',
+        'description': 'Gestión de nóminas',
+        'author': 'The Fantastic Four',
         'year': 2025,
     }
     # doctores = Doctor.objects.all()
@@ -125,3 +125,17 @@ def update_empleado(request,id):
     else:
         form = EmpleadoForm(instance=empleado)
     return render(request, 'Empleado/update_empleado.html', {'form': form})
+
+# ************************Vistas para el CRUD de Rol*****************************************
+
+def create_rol(request):
+    pass
+
+def mostrar_rol(request):
+    pass
+
+def delete_rol(request, id):
+    pass
+
+def update_rol(request,id):
+    pass
