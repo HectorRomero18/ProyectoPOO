@@ -23,6 +23,12 @@ urlpatterns = [
     path('create_empleado', views.create_empleado, name='create_empleado'),
     path('list_empleado', views.mostrar_empleado, name='list_empleado'),
     path('delete_empleado/<int:id>', views.delete_empleado, name='delete_empleado'),
-    path('update_empleado/<int:id>', views.update_empleado, name='update_empleado')
+    path('update_empleado/<int:id>', views.update_empleado, name='update_empleado'),
+    
+     # *********************URL PARA EL MODELO ROL**********************
+    path('create_rol', views.create_rol, name='create_rol'),
+    path('list_rol', views.mostrar_rol, name='list_rol'),
+    path('delete_rol/<int:id>', views.delete_rol, name='delete_rol'),
+    path('update_rol/<int:id>', views.update_rol, name='update_rol'),
 ]
 
