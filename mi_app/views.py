@@ -2,9 +2,9 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render,redirect, get_object_or_404
 from .models import Cargo, Departamento, Empleado, TipoContrato
 from .forms import CargoForm, DepartamentoForm, EmpleadoForm, ContratoForm
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.db.utils import IntegrityError
 from django.contrib.auth.decorators import login_required
 
@@ -50,6 +50,24 @@ def signup(request):
 def signout(request):
     logout(request)
     return redirect('core:signup')
+
+def signin(request):
+    if request.method =='GET':
+        return render(request, 'signin.html', {
+            'form': AuthenticationForm
+    })
+    else:
+        user = authenticate(
+            request, username=request.POST['username'],password=request.POST
+            ['password'])
+        if user is None:
+            return render(request, 'signin.html', {
+                'form': AuthenticationForm,
+                'error': 'USUARIO O CONTRASEÑA INCORRECTA'
+            })
+        else:
+            login(request, user)
+            return redirect('core:home')
 
 # Vistas para el CRUD del modelo Cargo
 
