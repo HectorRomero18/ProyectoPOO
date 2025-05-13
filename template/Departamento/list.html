@@ -103,7 +103,7 @@
 
     <!-- Botón para nuevo cargo -->
     <div class="d-flex justify-content-end mb-4">
-        <a class="btn btn-success" href="{% url 'core:create_departamento' %}">
+        <a class="btn btn-success text-white" href="{% url 'core:create_departamento' %}">
             <i class="fas fa-plus me-2"></i>Nuevo Departamento
         </a>
     </div>
@@ -126,11 +126,11 @@
                             <th scope="row">{{ departamento.id }}</th>
                             <td>{{ departamento.descripcion }}</td>
                             <td class="text-center">
-                                <a href="{% url 'core:update_departamento' id=departamento.id %}" class="btn btn-sm btn-primary me-2">
-                                    <i class="fas fa-edit"></i> Editar
+                                <a href="{% url 'core:update_departamento' id=departamento.id %}" class="btn btn-sm btn-primary me-2 text-white">
+                                    <i class="fas fa-edit text-white"></i> Editar
                                 </a>
                                 
-                                <a href="{% url 'core:delete_departamento' departamento.id %}" onclick="return confirm('¿Estás seguro de que deseas eliminar este departamento?');" class="btn btn-danger btn btn-sm btn-primary me-2">
+                                <a href="{% url 'core:delete_departamento' departamento.id %}" onclick="return confirm('¿Estás seguro de que deseas eliminar este departamento?');" class="btn btn-danger btn btn-sm btn-primary me-2 text-white">
                                     <i class="fas fa-trash-alt"></i> Eliminar
                                 </a>
                             </td>

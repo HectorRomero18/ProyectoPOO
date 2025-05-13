@@ -103,8 +103,8 @@
 
     <!-- Botón para nuevo cargo -->
     <div class="d-flex justify-content-end mb-4">
-        <a class="btn btn-success" href="{% url 'core:create_empleado' %}">
-            <i class="fas fa-plus me-2"></i>Nuevo Empleado
+        <a class="btn btn-success text-white" href="{% url 'core:create_empleado' %}">
+            <i class="fas fa-plus me-2 text-white"></i>Nuevo Empleado
         </a>
     </div>
 
@@ -134,12 +134,12 @@
                             <td>{{ empleado.cargo }}</td>
                             <td>{{ empleado.departamento }}</td>
                             <td class="text-center">
-                                <a href="{% url 'core:update_empleado' id=empleado.id %}" class="btn btn-sm btn-primary me-2">
-                                    <i class="fas fa-edit"></i> Editar
+                                <a href="{% url 'core:update_empleado' id=empleado.id %}" class="btn btn-sm btn-primary me-2 text-white">
+                                    <i class="fas fa-edit text-white"></i> Editar
                                 </a>
                                
-                                <a href="{% url 'core:delete_empleado' id=empleado.id %}" onclick="return confirm('¿Estás seguro de que deseas eliminar este empleado?');" class="btn btn-danger btn btn-sm btn-primary me-2">
-                                    <i class="fas fa-trash-alt"></i> Eliminar
+                                <a href="{% url 'core:delete_empleado' id=empleado.id %}" onclick="return confirm('¿Estás seguro de que deseas eliminar este empleado?');" class="btn btn-danger btn btn-sm btn-primary me-2 text-white">
+                                    <i class="fas fa-trash-alt text-white"></i> Eliminar
                                 </a>
                             </td>
                         </tr>
