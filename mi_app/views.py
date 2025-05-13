@@ -6,7 +6,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.db.utils import IntegrityError
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def home(request):
     data = {
         'title': 'Sistema de Nómina de Pagos',
@@ -47,9 +49,11 @@ def signup(request):
 
 def signout(request):
     logout(request)
-    return redirect('core:home')
+    return redirect('core:signup')
 
 # Vistas para el CRUD del modelo Cargo
+
+@login_required
 def create_cargo(request):
 
     if request.method == 'POST':
@@ -62,6 +66,7 @@ def create_cargo(request):
     return render(request, 'Cargo/create_cargo.html', {'form': form})
 
 
+@login_required
 def mostrar_cargos(request):
     query = request.GET.get('q')
 
@@ -72,12 +77,14 @@ def mostrar_cargos(request):
     return render(request, 'Cargo/list.html', {'cargos': cargos})
 
 
+@login_required
 def delete_cargo(request, id):
     cargo = get_object_or_404(Cargo, id=id)
     cargo.delete()
     return redirect('core:list_cargo')
 
 
+@login_required
 def update_cargo(request, id):
     cargo = get_object_or_404(Cargo, id=id)
     if request.method == 'POST':
@@ -91,6 +98,7 @@ def update_cargo(request, id):
 
 
 # Vistas para el CRUD del modelo Departamento
+@login_required
 def create_departamento(request):
 
     if request.method == 'POST':
@@ -103,6 +111,7 @@ def create_departamento(request):
     return render(request, 'Departamento/create_departamento.html', {'form': form})
 
 
+@login_required
 def mostrar_departamentos(request):
     query = request.GET.get('q')
 
@@ -113,12 +122,14 @@ def mostrar_departamentos(request):
     return render(request, 'Departamento/list.html', {'departamentos': departamentos})
 
 
+@login_required
 def delete_departamento(request, id):
     departamento = get_object_or_404(Departamento, id=id)
     departamento.delete()
     return redirect('core:list_departamento')
 
 
+@login_required
 def update_departamento(request, id):
     departamento = get_object_or_404(Departamento, id=id)
     if request.method == 'POST':
@@ -133,6 +144,7 @@ def update_departamento(request, id):
 
 # ************************Vistas para el CRUD de Empleado*****************************************
 
+@login_required
 def create_empleado(request):
     if request.method == 'POST':
         form = EmpleadoForm(request.POST or None)
@@ -143,6 +155,7 @@ def create_empleado(request):
         form  = EmpleadoForm()
     return render(request, 'Empleado/create_empleado.html', {'form': form})
 
+@login_required
 def mostrar_empleado(request):
     query = request.GET.get('q')
     if query:
@@ -156,6 +169,7 @@ def delete_empleado(request, id):
     empleado.delete()
     return redirect('core:list_empleado') 
 
+@login_required
 def update_empleado(request,id):
     empleado = get_object_or_404(Empleado, id=id)
     if request.method == 'POST':
@@ -168,14 +182,18 @@ def update_empleado(request,id):
 
 # ************************Vistas para el CRUD de Rol*****************************************
 
+@login_required
 def create_rol(request):
     pass
 
+@login_required
 def mostrar_rol(request):
     pass
 
+@login_required
 def delete_rol(request, id):
     pass
 
+@login_required
 def update_rol(request,id):
     pass

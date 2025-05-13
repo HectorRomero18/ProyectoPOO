@@ -69,6 +69,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'proyecto_poo.wsgi.application'
+LOGIN_URL = '/login/'
 
 
 # Database
