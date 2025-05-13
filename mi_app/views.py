@@ -1,7 +1,7 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render,redirect, get_object_or_404
-from .models import Cargo, Departamento, Empleado
-from .forms import CargoForm, DepartamentoForm, EmpleadoForm
+from .models import Cargo, Departamento, Empleado, TipoContrato
+from .forms import CargoForm, DepartamentoForm, EmpleadoForm, ContratoForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
@@ -197,3 +197,48 @@ def delete_rol(request, id):
 @login_required
 def update_rol(request,id):
     pass
+
+# Vistas para el CRUD del modelo Contrato
+
+@login_required
+def create_contrato(request):
+
+    if request.method == 'POST':
+        form = ContratoForm(request.POST or None)
+        if form.is_valid():
+            form.save()
+            return redirect('core:list_contrato')
+    else:
+        form = ContratoForm()
+    return render(request, 'Contrato/create_contrato.html', {'form': form})
+
+
+@login_required
+def mostrar_contrato(request):
+    query = request.GET.get('q')
+
+    if query:
+        contrato = TipoContrato.objects.filter(descripcion__icontains=query)
+    else:
+        contrato = TipoContrato.objects.all()
+    return render(request, 'Contrato/list.html', {'contrato': contrato})
+
+
+@login_required
+def delete_contrato(request, id):
+    contrato = get_object_or_404(TipoContrato, id=id)
+    contrato.delete()
+    return redirect('core:list_contrato')
+
+
+@login_required
+def update_contrato(request, id):
+    contrato = get_object_or_404(TipoContrato, id=id)
+    if request.method == 'POST':
+        form = ContratoForm(request.POST, instance=contrato)
+        if form.is_valid():
+            form.save()
+            return redirect('core:list_contrato')
+    else:
+        form = ContratoForm(instance=contrato)
+    return render(request, 'Contrato/update_contrato.html', {'form': form})

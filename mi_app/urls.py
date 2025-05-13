@@ -34,5 +34,11 @@ urlpatterns = [
     path('list_rol', views.mostrar_rol, name='list_rol'),
     path('delete_rol/<int:id>', views.delete_rol, name='delete_rol'),
     path('update_rol/<int:id>', views.update_rol, name='update_rol'),
+
+         # *********************URL PARA EL MODELO CONTRATO**********************
+    path('create_contrato', views.create_contrato, name='create_contrato'),
+    path('list_contrato', views.mostrar_contrato, name='list_contrato'),
+    path('delete_contrato/<int:id>', views.delete_contrato, name='delete_contrato'),
+    path('update_contrato/<int:id>', views.update_contrato, name='update_contrato'),
 ]
 

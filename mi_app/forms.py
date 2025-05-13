@@ -1,5 +1,5 @@
 from django import forms
-from .models import Cargo, Departamento, Empleado ,Rol
+from .models import Cargo, Departamento, Empleado ,Rol, TipoContrato
 
 class CargoForm(forms.ModelForm):
     class Meta:
@@ -19,4 +19,9 @@ class EmpleadoForm(forms.ModelForm):
 class RolForm(forms.ModelForm):
     class Meta:
         model = Rol
+        fields = '__all__'
+
+class ContratoForm(forms.ModelForm):
+    class Meta:
+        model = TipoContrato
         fields = '__all__'
