@@ -104,7 +104,12 @@ def create_departamento(request):
 
 
 def mostrar_departamentos(request):
-    departamentos = Departamento.objects.all()
+    query = request.GET.get('q')
+
+    if query:
+        departamentos = Departamento.objects.filter(descripcion__icontains=query)
+    else:
+        departamentos = Departamento.objects.all()
     return render(request, 'Departamento/list.html', {'departamentos': departamentos})
 
 
