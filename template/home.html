@@ -373,8 +373,12 @@
           </li>
         </ul>
         <div class="d-flex">
-          <a href="{% url 'core:logout' %}" class="btn btn-outline-primary me-2">Cerrar Sesión</a>
-          <a href="{% url 'core:signup' %}" class="btn btn-primary">Registrarse</a>
+          {% if user.is_authenticathed %}
+            <a href="{% url 'core:signup' %}" class="btn btn-primary">Registrarse</a>
+          {% else %}
+          
+            <a href="{% url 'core:logout' %}" class="btn btn-outline-primary me-2">Cerrar Sesión</a>
+          {% endif %}
         </div>
       </div>
     </div>

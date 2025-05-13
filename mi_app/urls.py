@@ -1,10 +1,14 @@
 from django.urls import path
+from django.contrib.auth import views as auth_views
+
 from .import  views
 app_name = 'core'  # Nombre de la aplicación para el espacio de nombres
 urlpatterns = [
     path('', views.home, name='home'),
     path('signup/', views.signup, name='signup'),
     path('logout/', views.signup, name='logout'),
+    path('login/', views.signup, name='login'),
+
 
     
     # *****************URL PARA EL MODELO CARGO**********************
