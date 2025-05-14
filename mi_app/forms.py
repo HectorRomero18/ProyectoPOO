@@ -19,8 +19,14 @@ class EmpleadoForm(forms.ModelForm):
 class RolForm(forms.ModelForm):
     class Meta:
         model = Rol
-        fields = '__all__'
-
+        fields = ['empleado', 'aniomes', 'sueldo', 'horas_extra', 'bono']
+        labels = {
+            'aniomes': 'Mes y Año de la Nómina',  # Nuevo nombre que se mostrará
+        }
+        widgets = {
+            'aniomes': forms.DateInput(attrs={'type': 'date'}),
+        }
+    
 class ContratoForm(forms.ModelForm):
     class Meta:
         model = TipoContrato

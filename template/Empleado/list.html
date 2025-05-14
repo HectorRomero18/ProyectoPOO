@@ -121,6 +121,7 @@
                             <th scope="col">Cedula</th>
                             <th scope="col">Cargo</th>
                             <th scope="col">Departamento</th>
+                            <th scope="col">Sueldo</th>
                             <th scope="col" class="text-center">Acciones</th>
                         </tr>
                     </thead>
@@ -133,6 +134,7 @@
                             <td>{{ empleado.cedula }}</td>
                             <td>{{ empleado.cargo }}</td>
                             <td>{{ empleado.departamento }}</td>
+                            <td>{{ empleado.sueldo }}</td>
                             <td class="text-center">
                                 <a href="{% url 'core:update_empleado' id=empleado.id %}" class="btn btn-sm btn-primary me-2">
                                     <i class="fas fa-edit"></i> Editar

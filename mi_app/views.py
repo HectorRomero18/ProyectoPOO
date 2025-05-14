@@ -1,7 +1,7 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render,redirect, get_object_or_404
-from .models import Cargo, Departamento, Empleado, TipoContrato
-from .forms import CargoForm, DepartamentoForm, EmpleadoForm, ContratoForm
+from .models import Cargo, Departamento, Empleado, TipoContrato , Rol
+from .forms import CargoForm, DepartamentoForm, EmpleadoForm, ContratoForm , RolForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
@@ -183,20 +183,64 @@ def update_empleado(request,id):
 # ************************Vistas para el CRUD de Rol*****************************************
 
 @login_required
-def create_rol(request):
-    pass
-
-@login_required
 def mostrar_rol(request):
-    pass
+    query = request.GET.get('q')
+    if query:
+        rols = Rol.objects.filter(Empleado__icontains=query)
+    else:
+        rols = Rol.objects.all()
+    return render(request, 'Rol/list.html', {'roles': rols})
 
 @login_required
-def delete_rol(request, id):
-    pass
+def create_rol(request):
+    context={'title':'Crear Rol de pago'}
+    if request.method == 'GET':
+        form = RolForm()
+        context['form'] = form
+        return render(request, 'Rol/create_rol.html', context)
+    else:
+        form  = RolForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('core:list_rol')
+        else:
+            context['form'] = form
+            return render(request, 'Rol/create_rol.html')
+        
 
 @login_required
 def update_rol(request,id):
-    pass
+    context = {'title': 'Actualizar Rol'}
+
+    rol = Rol.objects.get(pk=id)
+    
+    if request.method == "GET":
+        form = RolForm(instance=rol)
+        context['form'] = form
+        return render(request, 'Rol/create_rol.html',context)
+    else:
+        form = RolForm(request.POST,instance=rol)
+        if form.is_valid():
+          form.save()
+          return redirect('core:list_rol')
+        else:
+            context['form'] = form
+            return render(request,'Rol/create_rol.html',context)
+      
+@login_required
+def delete_rol(request, id):
+    rol = None
+    try:
+        rol = Rol.objects.get(pk=id)
+        if request.method == "GET":
+            context = {'title':'Rol a Eliminar','rol':rol,'error':''}
+            return render (request, 'Rol/delete_rol.html',context)
+        else:
+            rol.delete()
+            return redirect('core:list_rol')
+    except:
+        context= {'title' : 'Datos del rol','rol':rol,'error':'Error al eliminar el rol'}
+        return render (request, 'Rol/delete_rol.html',context)
 
 # Vistas para el CRUD del modelo Contrato
 
