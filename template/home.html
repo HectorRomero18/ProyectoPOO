@@ -354,7 +354,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mx-auto">
           <li class="nav-item">
-            <a class="nav-link active" href="#">Inicio</a>
+            <a class="nav-link active" href="{% url 'core:home' %}">Inicio</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'core:list_cargo' %}">Cargo</a>
@@ -377,7 +377,7 @@
             <a href="{% url 'core:signup' %}" class="btn btn-primary">Registrarse</a>
           {% else %}
           
-            <a href="{% url 'core:logout' %}" class="btn btn-outline-primary me-2">Cerrar Sesión</a>
+            <a href="{% url 'core:logout' %}" class="btn btn-outline-primary me-2 text-white">Cerrar Sesión</a>
           {% endif %}
         </div>
       </div>
@@ -393,12 +393,12 @@
           <h1>{{description}}</h1>
           <p class="text-muted">{{doctores}}</p>
           <div class="d-flex flex-wrap">
-            <a href="#" class="btn btn-primary me-3 mb-2">Comenzar ahora</a>
-            <a href="#" class="btn btn-outline-primary mb-2">Ver demostración</a>
+            <a href="{% url 'core:list_empleado' %}" class="btn btn-outline-primary btn-lg me-2 text-white">Comenienza a gestionar</a>
+            <!-- <a href="{% url 'core:list_empleado' %}" class="btn btn-outline-primary mb-2 text-white">Ver Empleados</a> -->
           </div>
         </div>
         <div class="col-lg-6">
-          <img src="{% static 'img/nnomina2.jpg' %}" alt="Doctor App Dashboard" class="hero-img img-fluid" width="3000px">
+          <img src="{% static 'img/3992745.jpg' %}" alt="Doctor App Dashboard" class="hero-img img-fluid" width="2000px">
 
         </div>
       </div>
@@ -555,7 +555,7 @@
           </div>
         </div>
         <div class="col-lg-6 order-lg-1">
-          <img src="/api/placeholder/600/450" alt="App Interface" class="img-fluid rounded shadow">
+          <img src="{% static 'img/intuitiva.webp' %}" alt="App Interface" class="img-fluid rounded shadow"  width="1500px">
         </div>
       </div>
     </div>
@@ -612,7 +612,7 @@
 </section>
 
 
-  <!-- Pricing Section -->
+  <!-- Pricing Section
   <section class="py-5 bg-light">
     <div class="container">
       <div class="row justify-content-center text-center mb-5">
@@ -681,7 +681,7 @@
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
  
     
   {% endblock content %}

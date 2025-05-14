@@ -1,10 +1,17 @@
+from django.core.paginator import Paginator
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render,redirect, get_object_or_404
+<<<<<<< HEAD
 from .models import Cargo, Departamento, Empleado, TipoContrato , Rol
 from .forms import CargoForm, DepartamentoForm, EmpleadoForm, ContratoForm , RolForm
 from django.contrib.auth.forms import UserCreationForm
+=======
+from .models import Cargo, Departamento, Empleado, TipoContrato
+from .forms import CargoForm, DepartamentoForm, EmpleadoForm, ContratoForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+>>>>>>> 9ed0709c6d8d7a8b7799d34f95e31068fe97be6b
 from django.contrib.auth.models import User
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.db.utils import IntegrityError
 from django.contrib.auth.decorators import login_required
 
@@ -51,6 +58,24 @@ def signout(request):
     logout(request)
     return redirect('core:signup')
 
+def signin(request):
+    if request.method =='GET':
+        return render(request, 'signin.html', {
+            'form': AuthenticationForm
+    })
+    else:
+        user = authenticate(
+            request, username=request.POST['username'],password=request.POST
+            ['password'])
+        if user is None:
+            return render(request, 'signin.html', {
+                'form': AuthenticationForm,
+                'error': 'USUARIO O CONTRASEÑA INCORRECTA'
+            })
+        else:
+            login(request, user)
+            return redirect('core:home')
+
 # Vistas para el CRUD del modelo Cargo
 
 @login_required
@@ -69,13 +94,20 @@ def create_cargo(request):
 @login_required
 def mostrar_cargos(request):
     query = request.GET.get('q')
-
     if query:
         cargos = Cargo.objects.filter(descripcion__icontains=query)
     else:
         cargos = Cargo.objects.all()
-    return render(request, 'Cargo/list.html', {'cargos': cargos})
 
+    paginator = Paginator(cargos, 4)  
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'Cargo/list.html', {
+        'cargos': page_obj,
+        'is_paginated': page_obj.has_other_pages(),
+        'page_obj': page_obj
+    })
 
 @login_required
 def delete_cargo(request, id):
@@ -114,13 +146,20 @@ def create_departamento(request):
 @login_required
 def mostrar_departamentos(request):
     query = request.GET.get('q')
-
     if query:
         departamentos = Departamento.objects.filter(descripcion__icontains=query)
     else:
         departamentos = Departamento.objects.all()
-    return render(request, 'Departamento/list.html', {'departamentos': departamentos})
 
+    paginator = Paginator(departamentos, 4)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'Departamento/list.html', {
+        'departamentos': page_obj,
+        'is_paginated': page_obj.has_other_pages(),
+        'page_obj': page_obj
+    })
 
 @login_required
 def delete_departamento(request, id):
@@ -162,7 +201,16 @@ def mostrar_empleado(request):
         empleado = Empleado.objects.filter(cedula__icontains=query)
     else:
         empleado = Empleado.objects.all()
-    return render(request, 'Empleado/list.html', {'empleados': empleado})
+
+    paginator = Paginator(empleado, 1)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'Empleado/list.html', {
+        'empleados': page_obj,
+        'is_paginated': page_obj.has_other_pages(),
+        'page_obj': page_obj
+    })
 
 def delete_empleado(request, id):
     empleado = get_object_or_404(Empleado, id=id)
@@ -259,14 +307,21 @@ def create_contrato(request):
 
 @login_required
 def mostrar_contrato(request):
-    query = request.GET.get('q')
+    query = request.GET.get('q', '')
+    contrato_list = TipoContrato.objects.filter(descripcion__icontains=query) if query else TipoContrato.objects.all()
 
-    if query:
-        contrato = TipoContrato.objects.filter(descripcion__icontains=query)
-    else:
-        contrato = TipoContrato.objects.all()
-    return render(request, 'Contrato/list.html', {'contrato': contrato})
+    paginator = Paginator(contrato_list, 4)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
+    context = {
+        'contrato': page_obj.object_list,
+        'page_obj': page_obj,
+        'is_paginated': page_obj.has_other_pages(),
+        'request': request  # para mantener el valor del input de búsqueda
+    }
+
+    return render(request, 'Contrato/list.html', context)
 
 @login_required
 def delete_contrato(request, id):

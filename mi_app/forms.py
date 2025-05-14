@@ -15,6 +15,12 @@ class EmpleadoForm(forms.ModelForm):
     class Meta:
         model = Empleado
         fields = '__all__'
+
+    def clean_cedula(self):
+        cedula = self.cleaned_data['cedula']
+        Empleado.validar_cedula_ecuatoriana(cedula)
+        return cedula
+    
         
 class RolForm(forms.ModelForm):
     class Meta:
