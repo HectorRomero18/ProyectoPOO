@@ -25,7 +25,7 @@ class EmpleadoForm(forms.ModelForm):
 class RolForm(forms.ModelForm):
     class Meta:
         model = Rol
-        fields = ['empleado', 'aniomes', 'sueldo', 'horas_extra', 'bono']
+        fields = ['empleado', 'aniomes', 'horas_extra', 'bono']
         labels = {
             'aniomes': 'Mes y Año de la Nómina',  # Nuevo nombre que se mostrará
         }

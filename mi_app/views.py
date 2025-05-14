@@ -229,12 +229,17 @@ def update_empleado(request,id):
 
 @login_required
 def mostrar_rol(request):
+    roles = Rol.objects.all()
+    print(request.method)
+    print(request.GET)
+    JsonResponse(list(roles.values()), safe=False)
     query = request.GET.get('q')
+    print(query)
     if query:
-        rols = Rol.objects.filter(Empleado__icontains=query)
+        roles = Rol.objects.filter(empleado__nombre__icontains=query)
     else:
-        rols = Rol.objects.all()
-    return render(request, 'Rol/list.html', {'roles': rols})
+        roles = Rol.objects.all()
+    return render(request, 'Rol/list.html', {'roles': roles})
 
 @login_required
 def create_rol(request):

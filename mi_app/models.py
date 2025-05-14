@@ -84,6 +84,7 @@ class Rol(models.Model):
     neto = models.DecimalField(max_digits=10, decimal_places=2)
     
     def save(self,*args, **kwargs):
+        self.sueldo = self.empleado.sueldo
         self.tot_ing = self.sueldo  + self.bono + (self.horas_extra * 15 )
         self.iess = (self.sueldo * Decimal('9.45'))/100
         self.tot_des = self.iess
