@@ -1,5 +1,9 @@
+from django.core.paginator import Paginator
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render,redirect, get_object_or_404
+from .models import Cargo, Departamento, Empleado, TipoContrato , Rol
+from .forms import CargoForm, DepartamentoForm, EmpleadoForm, ContratoForm , RolForm
+from django.contrib.auth.forms import UserCreationForm
 from .models import Cargo, Departamento, Empleado, TipoContrato
 from .forms import CargoForm, DepartamentoForm, EmpleadoForm, ContratoForm
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -87,13 +91,20 @@ def create_cargo(request):
 @login_required
 def mostrar_cargos(request):
     query = request.GET.get('q')
-
     if query:
         cargos = Cargo.objects.filter(descripcion__icontains=query)
     else:
         cargos = Cargo.objects.all()
-    return render(request, 'Cargo/list.html', {'cargos': cargos})
 
+    paginator = Paginator(cargos, 4)  
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'Cargo/list.html', {
+        'cargos': page_obj,
+        'is_paginated': page_obj.has_other_pages(),
+        'page_obj': page_obj
+    })
 
 @login_required
 def delete_cargo(request, id):
@@ -132,13 +143,20 @@ def create_departamento(request):
 @login_required
 def mostrar_departamentos(request):
     query = request.GET.get('q')
-
     if query:
         departamentos = Departamento.objects.filter(descripcion__icontains=query)
     else:
         departamentos = Departamento.objects.all()
-    return render(request, 'Departamento/list.html', {'departamentos': departamentos})
 
+    paginator = Paginator(departamentos, 4)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'Departamento/list.html', {
+        'departamentos': page_obj,
+        'is_paginated': page_obj.has_other_pages(),
+        'page_obj': page_obj
+    })
 
 @login_required
 def delete_departamento(request, id):
@@ -180,7 +198,16 @@ def mostrar_empleado(request):
         empleado = Empleado.objects.filter(cedula__icontains=query)
     else:
         empleado = Empleado.objects.all()
-    return render(request, 'Empleado/list.html', {'empleados': empleado})
+
+    paginator = Paginator(empleado, 1)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'Empleado/list.html', {
+        'empleados': page_obj,
+        'is_paginated': page_obj.has_other_pages(),
+        'page_obj': page_obj
+    })
 
 def delete_empleado(request, id):
     empleado = get_object_or_404(Empleado, id=id)
@@ -201,20 +228,64 @@ def update_empleado(request,id):
 # ************************Vistas para el CRUD de Rol*****************************************
 
 @login_required
-def create_rol(request):
-    pass
-
-@login_required
 def mostrar_rol(request):
-    pass
+    query = request.GET.get('q')
+    if query:
+        rols = Rol.objects.filter(Empleado__icontains=query)
+    else:
+        rols = Rol.objects.all()
+    return render(request, 'Rol/list.html', {'roles': rols})
 
 @login_required
-def delete_rol(request, id):
-    pass
+def create_rol(request):
+    context={'title':'Crear Rol de pago'}
+    if request.method == 'GET':
+        form = RolForm()
+        context['form'] = form
+        return render(request, 'Rol/create_rol.html', context)
+    else:
+        form  = RolForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('core:list_rol')
+        else:
+            context['form'] = form
+            return render(request, 'Rol/create_rol.html')
+        
 
 @login_required
 def update_rol(request,id):
-    pass
+    context = {'title': 'Actualizar Rol'}
+
+    rol = Rol.objects.get(pk=id)
+    
+    if request.method == "GET":
+        form = RolForm(instance=rol)
+        context['form'] = form
+        return render(request, 'Rol/create_rol.html',context)
+    else:
+        form = RolForm(request.POST,instance=rol)
+        if form.is_valid():
+          form.save()
+          return redirect('core:list_rol')
+        else:
+            context['form'] = form
+            return render(request,'Rol/create_rol.html',context)
+      
+@login_required
+def delete_rol(request, id):
+    rol = None
+    try:
+        rol = Rol.objects.get(pk=id)
+        if request.method == "GET":
+            context = {'title':'Rol a Eliminar','rol':rol,'error':''}
+            return render (request, 'Rol/delete_rol.html',context)
+        else:
+            rol.delete()
+            return redirect('core:list_rol')
+    except:
+        context= {'title' : 'Datos del rol','rol':rol,'error':'Error al eliminar el rol'}
+        return render (request, 'Rol/delete_rol.html',context)
 
 # Vistas para el CRUD del modelo Contrato
 
@@ -233,14 +304,21 @@ def create_contrato(request):
 
 @login_required
 def mostrar_contrato(request):
-    query = request.GET.get('q')
+    query = request.GET.get('q', '')
+    contrato_list = TipoContrato.objects.filter(descripcion__icontains=query) if query else TipoContrato.objects.all()
 
-    if query:
-        contrato = TipoContrato.objects.filter(descripcion__icontains=query)
-    else:
-        contrato = TipoContrato.objects.all()
-    return render(request, 'Contrato/list.html', {'contrato': contrato})
+    paginator = Paginator(contrato_list, 4)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
+    context = {
+        'contrato': page_obj.object_list,
+        'page_obj': page_obj,
+        'is_paginated': page_obj.has_other_pages(),
+        'request': request  # para mantener el valor del input de búsqueda
+    }
+
+    return render(request, 'Contrato/list.html', context)
 
 @login_required
 def delete_contrato(request, id):

@@ -1,4 +1,5 @@
 from django.db import models
+from decimal import Decimal
 from django.core.exceptions import ValidationError
 
 # Create your models here.
@@ -36,6 +37,9 @@ class Empleado(models.Model):
                                     on_delete=models.CASCADE)
     tipo_contrato = models.ForeignKey(TipoContrato,
                                     on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.nombre
 
     @staticmethod
     def validar_cedula_ecuatoriana(cedula):
@@ -70,7 +74,7 @@ class Rol(models.Model):
     empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)
     aniomes = models.DateField()#202501
     sueldo = models.DecimalField(max_digits=10, decimal_places=2)
-    horas_extra = models.DecimalField(max_digits=10, decimal_places=2)
+    horas_extra = models.IntegerField() 
     bono = models.DecimalField(max_digits=10, decimal_places=2)
     iess = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -78,3 +82,10 @@ class Rol(models.Model):
     tot_ing = models.DecimalField(max_digits=10, decimal_places=2)
     tot_des = models.DecimalField(max_digits=10, decimal_places=2)
     neto = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    def save(self,*args, **kwargs):
+        self.tot_ing = self.sueldo  + self.bono + (self.horas_extra * 15 )
+        self.iess = (self.sueldo * Decimal('9.45'))/100
+        self.tot_des = self.iess
+        self.neto = self.tot_ing - self.tot_des
+        super().save(*args, **kwargs)
