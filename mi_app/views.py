@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db.utils import IntegrityError
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 @login_required
 def home(request):
