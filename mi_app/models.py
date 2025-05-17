@@ -54,8 +54,43 @@ class Rol(models.Model):
     neto = models.DecimalField(max_digits=10, decimal_places=2)
     
     def save(self,*args, **kwargs):
+        self.sueldo = self.empleado.sueldo
         self.tot_ing = self.sueldo  + self.bono + (self.horas_extra * 15 )
         self.iess = (self.sueldo * Decimal('9.45'))/100
         self.tot_des = self.iess
         self.neto = self.tot_ing - self.tot_des
         super().save(*args, **kwargs)
+        
+class TipoPrestamo(models.Model):
+
+    descripcion = models.CharField(max_length=100)
+    tasa = models.IntegerField(default=0)
+
+
+    def __str__(self):
+
+        return self.descripcion
+
+ 
+
+class Prestamo(models.Model):
+    empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)
+    tipo_prestamo = models.ForeignKey(TipoPrestamo, on_delete=models.CASCADE)
+    fecha_prestamo = models.DateField()
+    monto = models.DecimalField(max_digits=10, decimal_places=2)
+    interes = models.DecimalField(max_digits=10, decimal_places=2)
+    monto_pagar = models.DecimalField(max_digits=10, decimal_places=2)
+    numero_cuotas = models.PositiveIntegerField(default=1)
+    cuota_mensual = models.DecimalField(max_digits=10, decimal_places=2)
+    saldo = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    def save(self,*args, **kwargs):
+        self.interes = (self.monto * self.tipo_prestamo.tasa)/100
+        self.monto_pagar = self.monto + self.interes
+        self.cuota_mensual = self.monto_pagar / self.numero_cuotas
+        self.saldo = self.monto_pagar
+        super().save(*args, **kwargs)
+   
+    def __str__(self):
+
+        return f"Préstamo de {self.empleado.nombre} - {self.tipo_prestamo.descripcion}"

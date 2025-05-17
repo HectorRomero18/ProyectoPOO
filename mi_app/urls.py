@@ -40,5 +40,10 @@ urlpatterns = [
     path('list_contrato', views.mostrar_contrato, name='list_contrato'),
     path('delete_contrato/<int:id>', views.delete_contrato, name='delete_contrato'),
     path('update_contrato/<int:id>', views.update_contrato, name='update_contrato'),
+    
+      # *********************URL PARA EL MODELO PRESTAMO**********************
+    path('create_prestamo', views.create_prestamo, name='create_prestamo'),
+    path('list_prestamo', views.mostrar_prestamo, name='list_prestamo'),
+    path('delete_prestamo/<int:id>', views.delete_prestamo, name='delete_prestamo'),
+    path('update_prestamo/<int:id>', views.update_prestamo, name='update_prestamo'),
 ]
-

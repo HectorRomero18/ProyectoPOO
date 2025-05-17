@@ -1,5 +1,5 @@
 from django import forms
-from .models import Cargo, Departamento, Empleado ,Rol, TipoContrato
+from .models import Cargo, Departamento, Empleado ,Rol, TipoContrato, Prestamo
 
 class CargoForm(forms.ModelForm):
     class Meta:
@@ -31,3 +31,11 @@ class ContratoForm(forms.ModelForm):
     class Meta:
         model = TipoContrato
         fields = '__all__'
+        
+class PrestamoForm(forms.ModelForm):
+    class Meta:
+        model = Prestamo
+        fields = ['empleado', 'tipo_prestamo', 'fecha_prestamo', 'monto','numero_cuotas']
+        widgets = {
+            'fecha_prestamo': forms.DateInput(attrs={'type': 'date'}),
+        }
