@@ -6,8 +6,9 @@ app_name = 'core'  # Nombre de la aplicación para el espacio de nombres
 urlpatterns = [
     path('', views.home, name='home'),
     path('signup/', views.signup, name='signup'),
-    path('logout/', views.signup, name='logout'),
+    path('logout/', views.signout, name='logout'),
     path('login/', views.signup, name='login'),
+    path('signin/', views.signin, name='signin'),
 
 
     
