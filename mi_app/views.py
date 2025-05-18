@@ -1,8 +1,8 @@
 from django.core.paginator import Paginator
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render,redirect, get_object_or_404
-from .models import Cargo, Departamento, Empleado, TipoContrato , Rol
-from .forms import CargoForm, DepartamentoForm, EmpleadoForm, ContratoForm , RolForm
+from .models import Cargo, Departamento, Empleado, TipoContrato , Rol , Prestamo
+from .forms import CargoForm, DepartamentoForm, EmpleadoForm, ContratoForm , RolForm , PrestamoForm
 from django.contrib.auth.forms import UserCreationForm
 from .models import Cargo, Departamento, Empleado, TipoContrato
 from .forms import CargoForm, DepartamentoForm, EmpleadoForm, ContratoForm
@@ -237,6 +237,7 @@ def mostrar_rol(request):
     print(query)
     if query:
         roles = Rol.objects.filter(empleado__nombre__icontains=query)
+        rols = Rol.objects.filter(empleado__nombre__icontains=query)
     else:
         roles = Rol.objects.all()
     return render(request, 'Rol/list.html', {'roles': roles})
@@ -343,3 +344,65 @@ def update_contrato(request, id):
     else:
         form = ContratoForm(instance=contrato)
     return render(request, 'Contrato/update_contrato.html', {'form': form})
+
+# Vistas para el CRUD del modelo Prestamo
+
+@login_required
+def mostrar_prestamo(request):
+    query = request.GET.get('q')
+    if query:
+        prestamos = Prestamo.objects.filter(tipo_prestamo__descripcion__icontains=query)
+    else:
+        prestamos = Prestamo.objects.all()
+    return render(request, 'Prestamo/list.html', {'prestamos': prestamos})
+
+@login_required
+def create_prestamo(request):
+    context={'title':'Crear Prestamo'}
+    if request.method == 'GET':
+        form = PrestamoForm()
+        context['form'] = form
+        return render(request, 'Prestamo/create_prestamo.html', context)
+    else:
+        form  = PrestamoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('core:list_prestamo')
+        else:
+            context['form'] = form
+            return render(request, 'Prestamo/create_prestamo.html')
+        
+
+@login_required
+def update_prestamo(request,id):
+    context = {'title': 'Actualizar Prestamo'}
+
+    prestamo = Prestamo.objects.get(pk=id)
+    
+    if request.method == "GET":
+        form = PrestamoForm(instance=prestamo)
+        context['form'] = form
+        return render(request, 'Prestamo/create_prestamo.html',context)
+    else:
+        form = PrestamoForm(request.POST,instance=prestamo)
+        if form.is_valid():
+          form.save()
+          return redirect('core:list_prestamo')
+        else:
+            context['form'] = form
+            return render(request,'Prestamo/create_prestamo.html',context)
+      
+@login_required
+def delete_prestamo(request, id):
+    prestamo = None
+    try:
+        prestamo = Prestamo.objects.get(pk=id)
+        if request.method == "GET":
+            context = {'title':'Prestamo a Eliminar','prestamo':prestamo,'error':''}
+            return render (request, 'Prestamo/delete_prestamo.html',context)
+        else:
+            prestamo.delete()
+            return redirect('core:list_prestamo')
+    except:
+        context= {'title' : 'Datos del prestamo','prestamo':prestamo,'error':'Error al eliminar el prestamo'}
+        return render (request, 'Prestamo/delete_prestamo.html',context)
